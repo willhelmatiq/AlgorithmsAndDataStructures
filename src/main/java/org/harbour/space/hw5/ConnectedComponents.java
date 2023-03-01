@@ -49,10 +49,16 @@ public class ConnectedComponents {
     static void DFS(int u, int p, int[] parents, List<List<Integer>> adjacencyList) {
         parents[u] = p;
         connectedVertex.add(u);
-        adjacencyList.get(u).forEach(v -> {
+        List<Integer> list = adjacencyList.get(u);
+        for (Integer v : list) {
             if (parents[v] == -1) {
                 DFS(v, u, parents, adjacencyList);
             }
-        });
+        }
+//        adjacencyList.get(u).forEach(v -> {
+//            if (parents[v] == -1) {
+//                DFS(v, u, parents, adjacencyList);
+//            }
+//        });
     }
 }
