@@ -33,7 +33,6 @@ public class Clocks {
         int[] result = new int[2];
         result[0] = (time[0] + hour) % 24;
         result[1] = (time[1] + minute) % 60;
-//        System.out.println(Arrays.toString(result));
         return result;
     }
 
