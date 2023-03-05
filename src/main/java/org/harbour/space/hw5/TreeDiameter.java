@@ -33,7 +33,6 @@ public class TreeDiameter {
         boolean[] visited = new boolean[n];
         dfs(0, 0, visited, adjacencyList);
         Arrays.fill(visited, false);
-        maxDepth = 0;
         dfs(maxDepthLeaf, 0, visited, adjacencyList);
         System.out.println(maxDepth);
     }
