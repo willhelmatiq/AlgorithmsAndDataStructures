@@ -21,8 +21,8 @@ public class TreeQueries {
         }
 
         List<Integer>[] adjacencyList = new ArrayList[n];
-        for (int j = 0; j < n; j++) {
-            adjacencyList[j] = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adjacencyList[i] = new ArrayList<>();
         }
         for (int i = n - 1; i > 0; i--) {
             adjacencyList[parents[i]].add(i);
