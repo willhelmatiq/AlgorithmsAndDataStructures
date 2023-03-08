@@ -9,8 +9,6 @@ import java.util.List;
 
 public class MinimumVertexCover {
 
-    static List<Integer> vertexesB = new ArrayList<>();
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] params = br.readLine().split(" ");
@@ -26,24 +24,31 @@ public class MinimumVertexCover {
                 adjacencyListA[i].add(edges[j] - 1);
             }
         }
-        int[] maxMatching = Arrays.stream(br.readLine().split(" ")).mapToInt(value -> Integer.parseInt(value) - 1).toArray();
+        int[] pl = Arrays.stream(br.readLine().split(" ")).mapToInt(value -> Integer.parseInt(value) - 1).toArray();
         int[] pr = new int[m];
+        Arrays.fill(pr, -1);
         for (int i = 0; i < n; i++) {
-            if (maxMatching[i] != -1) {
-                pr[maxMatching[i]] = i;
+            if (pl[i] != -1) {
+                pr[pl[i]] = i;
             }
         }
         boolean[] visitedA = new boolean[n];
         boolean[] visitedB = new boolean[m];
         for (int i = 0; i < n; i++) {
-            if (maxMatching[i] == -1) {
-                dfs(i, visitedA, visitedB, adjacencyListA, maxMatching, 0, pr);
+            if (pl[i] == -1) {
+                tryKuhn(i, visitedA, visitedB, adjacencyListA, pl, pr);
             }
         }
         List<Integer> vertexesA = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             if (!visitedA[i]) {
                 vertexesA.add(i);
+            }
+        }
+        List<Integer> vertexesB = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            if (visitedB[i]) {
+                vertexesB.add(i);
             }
         }
         System.out.println(vertexesA.size() + vertexesB.size());
@@ -54,25 +59,20 @@ public class MinimumVertexCover {
         vertexesB.stream().sorted().toList().forEach(vertex -> System.out.print((vertex + 1) + " "));
     }
 
-    static void dfs(int s, boolean[] visitedA, boolean[] visitedB, List<Integer>[] adjacencyListA, int[] maxMatching, int graphPart, int[] pr) {
-        if (graphPart == 0) {
-            if (visitedA[s]) {
-                return;
-            }
-            visitedA[s] = true;
-            List<Integer> neighbours = adjacencyListA[s];
-            for (Integer neighbour : neighbours) {
-                if (neighbour != maxMatching[s]) {
-                    dfs(neighbour, visitedA, visitedB, adjacencyListA, maxMatching, (graphPart + 1) % 2, pr);
-                }
-            }
-        } else {
-            if (visitedB[s]) {
-                return;
-            }
-            visitedB[s] = true;
-            vertexesB.add(s);
-            dfs(pr[s], visitedA, visitedB, adjacencyListA, maxMatching, (graphPart + 1) % 2, pr);
+    static boolean tryKuhn(int s, boolean[] visitedA, boolean[] visitedB, List<Integer>[] adjacencyListA, int[] pl, int[] pr) {
+        if (visitedA[s]) {
+            return false;
         }
+        visitedA[s] = true;
+        List<Integer> neighbours = adjacencyListA[s];
+        for (Integer neighbour : neighbours) {
+            visitedB[neighbour] = true;
+            if (pr[neighbour] == -1 || tryKuhn(pr[neighbour], visitedA, visitedB, adjacencyListA, pl, pr)) {
+                pr[neighbour] = s;
+                pl[s] = neighbour;
+                return true;
+            }
+        }
+        return false;
     }
 }
