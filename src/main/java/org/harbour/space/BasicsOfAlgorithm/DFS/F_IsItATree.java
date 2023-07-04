@@ -1,17 +1,21 @@
-package org.harbour.space.BasicsOfAlgorithm.dfs;
+package org.harbour.space.BasicsOfAlgorithm.DFS;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class E_ConnectedComponentsSizes {
+public class F_IsItATree {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] params = br.readLine().split(" ");
         int n = Integer.parseInt(params[0]);
         int m = Integer.parseInt(params[1]);
+        if (m != n - 1) {
+            System.out.println("NO");
+            return;
+        }
         boolean[] visited = new boolean[n];
         ArrayList<Integer>[] adjacencyList = new ArrayList[n];
         for (int i = 0; i < n; i++) {
@@ -24,30 +28,21 @@ public class E_ConnectedComponentsSizes {
             adjacencyList[u].add(v);
             adjacencyList[v].add(u);
         }
-        ArrayList<Integer>[] connectedComponents = new ArrayList[n];
-        for (int i = 0; i < n; i++) {
-            if (connectedComponents[i] == null) {
-                connectedComponents[i] = new ArrayList<>();
-                dfs(adjacencyList, i, visited, connectedComponents[i], connectedComponents);
-            }
-        }
-        for (ArrayList<Integer> connectedComponent : connectedComponents) {
-            System.out.print(connectedComponent.size() + " ");
-        }
-
+        int connectedComponents = dfs(adjacencyList, 0, visited);
+        System.out.println(connectedComponents == n ? "YES" : "NO");
     }
 
-    static void dfs(ArrayList<Integer>[] adjacencyList, int u, boolean[] visited, ArrayList<Integer> connectedComponent, ArrayList<Integer>[] connectedComponents) {
+    static int dfs(ArrayList<Integer>[] adjacencyList, int u, boolean[] visited) {
         if (visited[u]) {
-            return;
+            return 0;
         }
-        connectedComponent.add(u);
-        connectedComponents[u] = connectedComponent;
+        int vertexCount = 1;
         visited[u] = true;
-        for (int v: adjacencyList[u]) {
+        for (int v: adjacencyList[u]){
             if (!visited[v]) {
-                dfs(adjacencyList, v, visited, connectedComponent, connectedComponents);
+                vertexCount += dfs(adjacencyList, v, visited);
             }
         }
+        return vertexCount;
     }
 }

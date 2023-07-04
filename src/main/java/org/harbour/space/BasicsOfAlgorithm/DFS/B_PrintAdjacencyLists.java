@@ -1,4 +1,4 @@
-package org.harbour.space.BasicsOfAlgorithm.dfs;
+package org.harbour.space.BasicsOfAlgorithm.DFS;
 
 import java.io.BufferedReader;
 import java.io.IOException;
